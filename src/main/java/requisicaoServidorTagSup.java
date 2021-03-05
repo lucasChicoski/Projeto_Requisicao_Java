@@ -31,7 +31,6 @@ public class requisicaoServidorTagSup {
             DateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
             Date data = new Date();
             String dataAtual = formatador.format(data);
-            //String startTime = "startTime=" + dataAtual + "%2000:00&";
             String startTime = "startTime=" + dataAtual + "%2000:00&";
             String endTime = "endTime=" + "2021-02-18" + "%2012:00:00-00&";
 
@@ -63,52 +62,35 @@ public class requisicaoServidorTagSup {
             String line;
             line = in.readLine();
 
-            //  System.out.println(line);
-
             //----------------------------------------------------tratandoJSON------------------------------
 
             JSONObject jsonObject = new JSONObject(line);
-            //JSONObject itens = jsonObject.getJSONObject("Timestamp");
             JSONArray arrItens = jsonObject.getJSONArray("Items");
 
             String[] NameTag = new String[arrItens.length()];
-            // String[] NameTagVALUE = new String[arrItens.length()];
             String[] WEBID = new String[arrItens.length()];
-
 
             int tamanho = arrItens.length();
 
-            //Implementado
             LeitorArqSup leArquivo = new LeitorArqSup();
             String[] linhaTagsTxT = leArquivo.leitor();
-
             String enderecoRequiscao = "";
-            // String intervalo = "summaryType=Average&summaryDuration=2h";
-            // System.out.println(intervalo);
 
             System.out.println("Wait till finish the process. Please don't turn off :)");
             for (int h = 0; h < leArquivo.contLinha; h++) {
+
                 for (int i = 0; i < arrItens.length(); i++) {
-                    //NameTag[i]
 
                     JSONObject TagItem = arrItens.getJSONObject(i);
-                    // JSONObject TagItemVALUE = arrItens.getJSONObject(i);
 
-
-                    //  System.out.println("WebID:" + TagItem.getString("WebId"));
-                    // NameTagVALUE[i] = TagItemVALUE.getString("Name");
                     NameTag[i] = TagItem.getString("Name");
                     WEBID[i] = TagItem.getString("WebId");
 
 
                     if (linhaTagsTxT[h].equals(NameTag[i])) {
 
-
                         String intervalo;
                         System.out.println("Tag found: " + linhaTagsTxT[h]);
-
-
-
 
                         if(linhaTagsTxT[h].equals("CT-PROD_BIHORARIA-OPC")){
 
@@ -122,21 +104,9 @@ public class requisicaoServidorTagSup {
 
                         }
 
-
-
-
-
-
-                      //  String intervalo;
-                       // System.out.println("Tag found: " + linhaTagsTxT[h]);
-
-                      //  intervalo = "summaryType=Average&summaryDuration=2h";
-                        //linhaTagsTxT[h].equals(NameTag[i])
-                        // enderecoRequiscao = "https://pivision.mosaicco.com/piwebapi/streams/" + WEBID[i] + "/" + "interpolated?" + startTime + endTime  + "interval=1h";
                         enderecoRequiscao = "https://pivision.mosaicco.com/piwebapi/streams/" + WEBID[i] + "/" + "summary?selectedFields=Items.Value&" + startTime  +  intervalo;//"interval=1h";
                         URL urlStream = new URL(enderecoRequiscao);
                         HttpURLConnection connectionStream = (HttpURLConnection) urlStream.openConnection();
-                        //startTime=2020-12-25%2000:00&endTime=2020-12-25%2012:00  --  startTime + endTime
                         connectionStream.setRequestProperty("Authorization", authHeaderValue);
                         connectionStream.setRequestMethod("GET");
 
@@ -163,7 +133,6 @@ public class requisicaoServidorTagSup {
 
 
                             TIMESTAMP = String.valueOf(Valor.getString("Timestamp"));
-                            //implementando
                             if(Valor.isNull("Value")){
 
                                 value = 0.0;
@@ -172,9 +141,6 @@ public class requisicaoServidorTagSup {
 
                                 value = Float.valueOf(Valor.getFloat("Value"));
                             }
-                            //implementando
-                            //value = Float.valueOf(Valor.getFloat("Value"));
-
 
                             String string = TIMESTAMP;
                             String valorQuePrecisa = TIMESTAMP.substring(0, 19) + "Z";
